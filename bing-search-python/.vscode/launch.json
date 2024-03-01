@@ -1,0 +1,74 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch GitHub.com chat (Edge)",
+            "type": "msedge",
+            "request": "launch",
+            "url": "https://github.com/copilot/",
+            "cascadeTerminateToConfigurations": ["Start Python"],
+            "internalConsoleOptions": "neverOpen",
+            "preLaunchTask": "Start local tunnel",
+            "postDebugTask": "Terminate All Tasks"
+        },
+        {
+            "name": "Python: Flask",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "flask",
+            "env": {
+                "FLASK_APP": "app.py",
+                "FLASK_DEBUG": "1"
+            },
+            "args": [
+                "run",
+                "--no-debugger",
+                "--no-reload"
+            ],
+            "jinja": true,
+            "justMyCode": true
+        },
+        {
+            "name": "Docker: Python - Flask",
+            "type": "docker",
+            "request": "launch",
+            "preLaunchTask": "docker-run: debug",
+            "python": {
+                "pathMappings": [
+                    {
+                        "localRoot": "${workspaceFolder}",
+                        "remoteRoot": "/app"
+                    }
+                ],
+                "projectType": "flask"
+            }
+        },
+        {
+            "name": "Start Python",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/app.py",
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "preLaunchTask": "Install requirements",
+            "postDebugTask": "Terminate All Tasks"
+        }
+    ],
+    "compounds": [
+        {
+            "name": "Debug in GitHub.com chat (Edge)",
+            "configurations": [
+                "Launch GitHub.com chat (Edge)",
+                "Start Python"
+            ],
+            "stopAll": true,
+            "presentation": {
+                "group": "1-local",
+                "order": 1
+            }
+        }
+    ]
+}
