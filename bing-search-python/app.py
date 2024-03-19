@@ -135,7 +135,7 @@ def handle_turn():
                         'delta': {
                             'content': chat_completion.choices[0].message.content
                         },
-                        'finish_reason': chat_completion.choices[0].finish_reason
+                        # 'finish_reason': chat_completion.choices[0].finish_reason
                     }
                 ]
             }

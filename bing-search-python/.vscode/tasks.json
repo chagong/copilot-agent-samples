@@ -45,30 +45,24 @@
         },
         {
             "label": "Start local tunnel",
-            "type": "shell",
-            "command": "devtunnel user login -g; devtunnel host -p 5000 --allow-anonymous",
-            "linux": {
-                "command": "devtunnel user login -g; devtunnel host -p 5000 --allow-anonymous"
-            },
-            "windows": {
-                "command": "devtunnel user login -g; devtunnel host -p 5000 --allow-anonymous"
+            "type": "copilot",
+            "command": "debug-start-local-tunnel",
+            "args": {
+                "type": "dev-tunnel",
+                "ports": [
+                    {
+                        "portNumber": 5000,
+                        "protocol": "http",
+                        "access": "public",
+                        "writeToEnvironmentFile": {
+                            "endpoint": "TUNNEL_ENDPOINT",
+                            "domain": "TUNNEL_DOMAIN"
+                        }
+                    }
+                ]
             },
             "isBackground": true,
-            "problemMatcher": {
-                "pattern": [
-                    {
-                        "regexp": "^.*$",
-                        "file": 0,
-                        "location": 1,
-                        "message": 2
-                    }
-                ],
-                "background": {
-                    "activeOnStart": true,
-                    "beginsPattern": ".*",
-                    "endsPattern": "Ready to accept connections for tunnel"
-                }
-            }
+            "problemMatcher": "$copilot-local-tunnel-watch"
         },
         {
             "label": "Terminate All Tasks",
