@@ -16,7 +16,14 @@
                 "${workspaceFolder}/dist/**/*.js"
             ],
             "sourceMaps": true,
-            "preLaunchTask": "npm: build",
+            "preLaunchTask": "npm: build"
+        },
+        {
+            "name": "Docker Node.js Launch",
+            "type": "docker",
+            "request": "launch",
+            "preLaunchTask": "docker-run: debug",
+            "platform": "node"
         }
     ]
 }
