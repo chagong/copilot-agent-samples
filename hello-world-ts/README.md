@@ -2,8 +2,6 @@
 
 A simple Copilot agent plugin that answer user's questions like a cat.
 
-> **NOTE:** This sample is using Azure OpenAI model. You might need to update the code to switch to using OpenAI models.
-
 ## Development
 
 Install dependencies
@@ -14,18 +12,6 @@ npm install
 Build the app
 ```bash
 npm run build
-```
-
-Configure environment variables
-
-- create ".env" file under workspace root folder.
-- Fill in the following env variables like below example:
-```
-    OPENAI_API_BASE=https://xxxx/
-    OPENAI_API_TYPE=azure
-    OPENAI_API_VERSION=2024-02-15-preview
-    OPENAI_MODEL_NAME=gpt-4
-    OPENAI_API_KEY=<Your OpenAI KEY>
 ```
 
 Run locally in VSCode
@@ -84,4 +70,15 @@ az containerapp up \
   --location centralus \
   --source .
 ```
+## Verify deployment
 
+Look for the below message after __containerapp up__ command finished.
+```
+Container app created. Access your app at https://<xxxx>.<xxxx>.<xxxxx>.azurecontainerapps.io/
+```
+
+Copy the URL to your Copilot Agent URL setting. You can refer to [this](../../docs/README.md#step-4-configure-your-plugin-endpoint).
+
+Then you can start talking to GitHub Copilot:
+
+![Screenshot of a conversation with the @cat-agent](./cat-agent.png)
