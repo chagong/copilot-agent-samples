@@ -41,14 +41,15 @@ func main() {
 			c.Writer.WriteString(stringToChunk(err.Error()))
 			c.Writer.Flush()
 			c.Abort()
+			return
 		}
-		fmt.Println(requestBody)
 
 		token := c.GetHeader("X-Github-Token")
 		if token == "" {
 			c.Writer.WriteString(stringToChunk("Empty github token"))
 			c.Writer.Flush()
 			c.Abort()
+			return
 		}
 
 		currentMsg := requestBody.Messages[len(requestBody.Messages)-1]
@@ -59,8 +60,8 @@ func main() {
 			c.Writer.WriteString(stringToChunk(err.Error()))
 			c.Writer.Flush()
 			c.Abort()
+			return
 		}
-		fmt.Println(*it)
 
 		owner, name := currentMsg.CopilotReferences[0].Data.OwnerLogin, currentMsg.CopilotReferences[0].Data.Name
 		switch *it {
@@ -68,70 +69,76 @@ func main() {
 			pulls := listPullRequests(c, token, owner, name)
 			content, _ := json.Marshal(pulls)
 			resp, err := summarizePullRequestList(c, string(content))
-			fmt.Println(resp)
 			if err != nil {
 				fmt.Println(err)
 				c.Writer.WriteString(stringToChunk(err.Error()))
 				c.Writer.Flush()
 				c.Abort()
+				break
 			}
 			c.Writer.WriteString(stringToChunk(*resp))
 			c.Writer.Flush()
 			break
 		case Intensions[1]:
 			idStr, err := extractPullRequestID(c, currentMsg.Content)
-			fmt.Println(*idStr)
 			if err != nil {
 				c.Writer.WriteString(stringToChunk(err.Error()))
 				c.Writer.Flush()
 				c.Abort()
+				break
 			}
 			id, err := strconv.Atoi(*idStr)
 			if err != nil {
 				c.Writer.WriteString(stringToChunk(err.Error()))
 				c.Writer.Flush()
 				c.Abort()
+				break
 			}
 			pull, err := getPullRequest(c, token, owner, name, id)
 			if err != nil {
 				c.Writer.WriteString(stringToChunk(err.Error()))
 				c.Writer.Flush()
 				c.Abort()
+				break
 			}
 			resp, err := summarizePullRequest(c, *pull)
 			if err != nil {
 				c.Writer.WriteString(stringToChunk(err.Error()))
 				c.Writer.Flush()
 				c.Abort()
+				break
 			}
 			c.Writer.WriteString(stringToChunk(*resp))
 			c.Writer.Flush()
 			break
 		case Intensions[2]:
 			idStr, err := extractPullRequestID(c, currentMsg.Content)
-			fmt.Println(*idStr)
 			if err != nil {
 				c.Writer.WriteString(stringToChunk(err.Error()))
 				c.Writer.Flush()
 				c.Abort()
+				break
 			}
 			id, err := strconv.Atoi(*idStr)
 			if err != nil {
 				c.Writer.WriteString(stringToChunk(err.Error()))
 				c.Writer.Flush()
 				c.Abort()
+				break
 			}
 			err = approvePullRequest(c, token, owner, name, id)
 			if err != nil {
 				c.Writer.WriteString(stringToChunk(err.Error()))
 				c.Writer.Flush()
 				c.Abort()
+				break
 			}
 			c.Writer.WriteString(stringToChunk(fmt.Sprintf("Pull Request %d approved", id)))
 			c.Writer.Flush()
 			break
 		default:
-			fmt.Println()
+			c.Writer.WriteString(stringToChunk("What can I do for you?"))
+			c.Writer.Flush()
 		}
 
 	})
